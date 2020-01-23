@@ -89,6 +89,8 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
+    "@ngrx/store": "8.6.0",
+    "@ngrx/store-devtools": "8.6.0",
     "lodash": "4.17.13"
   }
 }

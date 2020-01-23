@@ -33,20 +33,8 @@ export class HomeComponent implements OnInit
 
     public onChooseDirectoryA(): void
     {
-        console.log("Got the click event!!!");
 
-        // ipcRenderer.send("openFolder", () => {
-        //     console.log("openFolder event sent.");
-        // });
-        //
-        // ipcRenderer.once("folderData", (event, data) => {
-        //     console.log("data:", data);
-        // });
-
-        this._electronService.ipcRenderer.invoke("openFolder", "foo")
-        .then((filePaths) => {
-            console.log("filePaths:", filePaths);
-        });
+        // TODO: Move the following code to directory-picker.
     }
 
 

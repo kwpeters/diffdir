@@ -1,18 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-directory-picker',
-  templateUrl: './directory-picker.component.html',
-  styleUrls: ['./directory-picker.component.scss']
+    selector: 'app-directory-picker',
+    templateUrl: './directory-picker.component.html',
+    styleUrls: ['./directory-picker.component.scss']
 })
-export class DirectoryPickerComponent implements OnInit {
+export class DirectoryPickerComponent implements OnInit
+{
 
-  constructor()
-  {
-  }
+    constructor()
+    {
+    }
 
-  ngOnInit()
-  {
-  }
+
+    ngOnInit()
+    {
+    }
+
+
+    // this._electronService.ipcRenderer.invoke("openFolder", "foo")
+    // .then((filePaths) => {
+    //     console.log("filePaths:", filePaths);
+    // });
+
 
 }

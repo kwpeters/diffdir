@@ -1,9 +1,19 @@
-<p class="title">
-    <!-- {{ messagePromise | async }} -->
+<div class="fill-parent flex-column">
 
+    <div class="flex-item-static flex-row">
+        <span>Left Directory:</span>
+        <span class="spacer-sm"></span>
+        <span class="flex-item-dynamic">foo</span>
+        <span class="spacer-sm"></span>
+        <button type="button" (click)="onChooseDirectoryA()">Choose Left Directory</button>
+    </div>
 
+    <div class="flex-item-static flex-row">
+        <span>Right Directory:</span>
+        <span class="spacer-sm"></span>
+        <span class="flex-item-dynamic">bar</span>
+        <span class="spacer-sm"></span>
+        <button type="button" (click)="onChooseDirectoryA()">Choose Right Directory</button>
+    </div>
 
-    <button type="button" (click)="onChooseDirectoryA()">Choose directory A</button>
-
-
-</p>
+</div>
