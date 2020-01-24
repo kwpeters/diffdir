@@ -15,6 +15,9 @@ import {AppConfig} from "../environments/environment";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 
+
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -55,6 +58,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
                 logOnly: AppConfig.production
             }
         ),
+        NgbModule,
         TranslateModule.forRoot(
             {
                 loader: {

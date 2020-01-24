@@ -1,19 +1,27 @@
-<div class="fill-parent flex-column">
+<div class="grid">
 
-    <div class="flex-item-static flex-row">
-        <span>Left Directory:</span>
-        <span class="spacer-sm"></span>
-        <span class="flex-item-dynamic">foo</span>
-        <span class="spacer-sm"></span>
-        <button type="button" (click)="onChooseDirectoryA()">Choose Left Directory</button>
+    <div class="left-label">
+        Left Directory:
     </div>
 
-    <div class="flex-item-static flex-row">
-        <span>Right Directory:</span>
-        <span class="spacer-sm"></span>
-        <span class="flex-item-dynamic">bar</span>
-        <span class="spacer-sm"></span>
-        <button type="button" (click)="onChooseDirectoryA()">Choose Right Directory</button>
+    <div class="left-dir-path readonly-value">
+        left directory
+    </div>
+
+    <div class="left-browse">
+        <button type="button">...</button>
+    </div>
+
+    <div class="right-label">
+        Right Directory:
+    </div>
+
+    <div class="right-dir-path readonly-value">
+        right directory
+    </div>
+
+    <div class="right-browse">
+        <button type="button">...</button>
     </div>
 
 </div>
