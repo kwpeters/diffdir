@@ -27,6 +27,9 @@ import { HomeModule } from './home/home.module';
 import { AppComponent } from './app.component';
 import { DirectoryPickerComponent } from './directory-picker/directory-picker.component';
 
+
+import {reducer as appReducer} from "./state/app.reducer";
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -43,13 +46,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         HomeModule,
         AppRoutingModule,
         StoreModule.forRoot(
-            {},
-            {
-                runtimeChecks: {
-                    strictStateImmutability: true,
-                    strictActionImmutability: true
-                }
-            }
+            {appState: appReducer} //,
+            // {
+            //     runtimeChecks: {
+            //         strictStateImmutability: true,
+            //         strictActionImmutability: true
+            //     }
+            // }
         ),
         StoreDevtoolsModule.instrument(
             {

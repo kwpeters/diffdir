@@ -1,40 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import {Directory} from "../depot/directory"
 import { ElectronService } from '../core/services';
+import { Store, select } from '@ngrx/store';
+import {IState} from "../state";
+import { Observable } from 'rxjs';
+import * as fromApp from "../state";
+
 
 @Component({
-    selector: 'app-home',
+    selector:    'app-home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss']
+    styleUrls:   ['./home.component.scss']
 })
 export class HomeComponent implements OnInit
 {
+    private _store: Store<IState>;
     private _electronService: ElectronService;
-    public messagePromise: Promise<string>;
+    private _leftDir: Observable<Directory>;
 
-    constructor(electronService: ElectronService) {
-
-        this._electronService = electronService;
-
-        const tmpDirPath = "/Users/kwpeters/tmp";
-        const tmpDir = new Directory(tmpDirPath);
-
-        this.messagePromise = tmpDir.exists()
-        .then((tmpDirStats) => {
-            return `tmp directory: ${JSON.stringify(tmpDirStats)}`;
-        });
-
-    }
+    public statusMessage: Observable<string>;
 
 
-    ngOnInit(): void {
-    }
-
-
-    public onChooseDirectoryA(): void
+    constructor(store: Store<IState>, electronService: ElectronService)
     {
+        this._store = store;
+        this._electronService = electronService;
+    }
 
-        // TODO: Move the following code to directory-picker.
+
+    ngOnInit(): void
+    {
+        this._leftDir      = this._store.pipe(select(fromApp.getLeftDir));
+        this.statusMessage = this._store.pipe(select(fromApp.getStatusMessage));
     }
 
 
