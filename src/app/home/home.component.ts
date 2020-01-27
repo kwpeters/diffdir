@@ -3,8 +3,8 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import {Directory} from "../depot/directory"
-import {IState} from "../state";
 import * as fromApp from "../state";
+import {SetLeftDir, SetRightDir} from "../state/app.actions";
 
 
 @Component({
@@ -14,12 +14,15 @@ import * as fromApp from "../state";
 })
 export class HomeComponent implements OnInit
 {
-    private _store: Store<IState>;
-    public vm: {statusMessage: Observable<string>};
+    private _store: Store<fromApp.IState>;
+    public vm: {
+        leftDirectory: Observable<Directory | undefined>,
+        rightDirectory: Observable<Directory | undefined>,
+        statusMessage: Observable<string>
+    };
 
 
-
-    constructor(store: Store<IState>)
+    constructor(store: Store<fromApp.IState>)
     {
         this._store = store;
     }
@@ -28,6 +31,8 @@ export class HomeComponent implements OnInit
     ngOnInit(): void
     {
         this.vm = {
+            leftDirectory: this._store.pipe(select(fromApp.getLeftDir)),
+            rightDirectory: this._store.pipe(select(fromApp.getRightDir)),
             statusMessage: this._store.pipe(select(fromApp.getStatusMessage))
         };
     }
@@ -35,13 +40,13 @@ export class HomeComponent implements OnInit
 
     public onLeftDirectoryChanged(newDirectory: Directory): void
     {
-        // TODO: Dispacth an action to the Store to set the left directory.
+        this._store.dispatch(new SetLeftDir(newDirectory));
     }
 
 
     public onRightDirectoryChanged(newDirectory: Directory): void
     {
-        // TODO: Dispacth an action to the Store to set the right directory.
+        this._store.dispatch(new SetRightDir(newDirectory));
     }
 
 
