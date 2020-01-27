@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 
 import {Directory} from "../depot/directory"
 import * as fromApp from "../state";
-import {SetLeftDir, SetRightDir} from "../state/app.actions";
 
 
 @Component({
@@ -31,22 +30,22 @@ export class HomeComponent implements OnInit
     ngOnInit(): void
     {
         this.vm = {
-            leftDirectory: this._store.pipe(select(fromApp.getLeftDir)),
+            leftDirectory:  this._store.pipe(select(fromApp.getLeftDir)),
             rightDirectory: this._store.pipe(select(fromApp.getRightDir)),
-            statusMessage: this._store.pipe(select(fromApp.getStatusMessage))
+            statusMessage:  this._store.pipe(select(fromApp.getStatusMessage))
         };
     }
 
 
     public onLeftDirectoryChanged(newDirectory: Directory): void
     {
-        this._store.dispatch(new SetLeftDir(newDirectory));
+        this._store.dispatch(new fromApp.SetLeftDir(newDirectory));
     }
 
 
     public onRightDirectoryChanged(newDirectory: Directory): void
     {
-        this._store.dispatch(new SetRightDir(newDirectory));
+        this._store.dispatch(new fromApp.SetRightDir(newDirectory));
     }
 
 

@@ -26,7 +26,7 @@ import { HomeModule } from './home/home.module';
 
 import { AppComponent } from './app.component';
 
-import {reducer as appReducer} from "./state/app.reducer";
+import * as fromApp from "./state";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -44,7 +44,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         HomeModule,
         AppRoutingModule,
         StoreModule.forRoot(
-            {appState: appReducer} //,
+            {appState: fromApp.reducer} //,
             // {
             //     runtimeChecks: {
             //         strictStateImmutability: true,
