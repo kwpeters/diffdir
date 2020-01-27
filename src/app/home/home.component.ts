@@ -15,8 +15,8 @@ import * as fromApp from "../state";
 export class HomeComponent implements OnInit
 {
     private _store: Store<IState>;
+    public vm: {statusMessage: Observable<string>};
 
-    public statusMessage: Observable<string>;
 
 
     constructor(store: Store<IState>)
@@ -27,8 +27,9 @@ export class HomeComponent implements OnInit
 
     ngOnInit(): void
     {
-
-        this.statusMessage = this._store.pipe(select(fromApp.getStatusMessage));
+        this.vm = {
+            statusMessage: this._store.pipe(select(fromApp.getStatusMessage))
+        };
     }
 
 

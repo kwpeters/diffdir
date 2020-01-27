@@ -3,7 +3,7 @@
     <div class="left-label">Left Directory:</div>
     <app-directory-picker
         class="left-dir-picker"
-        [initialDirectory]="'foo'"
+        [initialDirectory]="''"
         (onDirectoryChanged)="onLeftDirectoryChanged($event)"
     >
     </app-directory-picker>
@@ -11,7 +11,7 @@
     <div class="right-label">Right Directory:</div>
     <app-directory-picker
         class="right-dir-picker"
-        [initialDirectory]="'bar'"
+        [initialDirectory]="''"
         (onDirectoryChanged)="onRightDirectoryChanged($event)"
     >
     </app-directory-picker>
@@ -19,5 +19,5 @@
 </div>
 
 <div class="help-text">
-    {{ statusMessage | async }}
+    {{ vm.statusMessage | async }}
 </div>

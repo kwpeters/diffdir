@@ -12,7 +12,7 @@ import {ElectronService} from "../core/services/electron/electron.service";
 export class DirectoryPickerComponent implements OnInit
 {
     private _electronService: ElectronService;
-    private _vm: {
+    public vm: {
         dirName: string;
     };
 
@@ -31,7 +31,7 @@ export class DirectoryPickerComponent implements OnInit
 
     ngOnInit()
     {
-        this._vm = {
+        this.vm = {
             dirName: this.initialDirectory
         };
     }
@@ -43,7 +43,7 @@ export class DirectoryPickerComponent implements OnInit
         this._electronService.ipcRenderer.invoke("openFolder")
         .then((filePaths) => {
             const selectedDir =  filePaths[0];
-            this._vm.dirName = selectedDir;
+            this.vm.dirName = selectedDir;
             this.onDirectoryChanged.emit(new Directory(selectedDir));
         });
     }
