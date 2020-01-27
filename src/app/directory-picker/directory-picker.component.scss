@@ -1,0 +1,27 @@
+.grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "dir-path   browse";
+    justify-items: stretch;    // stretch horizontally
+    align-items: end;          // align vertically on the bottom
+    justify-content: stretch;
+    align-content: stretch;
+    min-height: 1em;
+}
+
+.dir-path {
+    grid-area: dir-path;
+    padding: 2px;
+    margin: 2px;
+
+}
+
+.browse {
+    grid-area: browse;
+}
+
+.underlined-value {
+    border-bottom: 1px solid rgba($color: #cccccc, $alpha: 0.3);
+}

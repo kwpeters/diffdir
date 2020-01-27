@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+import {Directory} from "../depot/directory";
+import {ElectronService} from "../core/services/electron/electron.service";
+
 
 @Component({
     selector: 'app-directory-picker',
@@ -7,21 +11,40 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DirectoryPickerComponent implements OnInit
 {
+    private _electronService: ElectronService;
+    private _vm: {
+        dirName: string;
+    };
 
-    constructor()
+
+    @Input()
+    initialDirectory: string;
+    @Output()
+    onDirectoryChanged = new EventEmitter<Directory>();
+
+
+    constructor(electronService: ElectronService)
     {
+        this._electronService = electronService;
     }
 
 
     ngOnInit()
     {
+        this._vm = {
+            dirName: this.initialDirectory
+        };
     }
 
 
-    // this._electronService.ipcRenderer.invoke("openFolder", "foo")
-    // .then((filePaths) => {
-    //     console.log("filePaths:", filePaths);
-    // });
+    public onBrowse(): void
+    {
 
-
+        this._electronService.ipcRenderer.invoke("openFolder")
+        .then((filePaths) => {
+            const selectedDir =  filePaths[0];
+            this._vm.dirName = selectedDir;
+            this.onDirectoryChanged.emit(new Directory(selectedDir));
+        });
+    }
 }

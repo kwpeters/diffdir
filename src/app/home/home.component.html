@@ -1,30 +1,23 @@
 <div class="grid">
 
-    <div class="left-label">
-        Left Directory:
-    </div>
+    <div class="left-label">Left Directory:</div>
+    <app-directory-picker
+        class="left-dir-picker"
+        [initialDirectory]="'foo'"
+        (onDirectoryChanged)="onLeftDirectoryChanged($event)"
+    >
+    </app-directory-picker>
 
-    <div class="left-dir-path readonly-value">
-        left directory
-    </div>
-
-    <div class="left-browse">
-        <button type="button">...</button>
-    </div>
-
-    <div class="right-label">
-        Right Directory:
-    </div>
-
-    <div class="right-dir-path readonly-value">
-        right directory
-    </div>
-
-    <div class="right-browse">
-        <button type="button">...</button>
-    </div>
+    <div class="right-label">Right Directory:</div>
+    <app-directory-picker
+        class="right-dir-picker"
+        [initialDirectory]="'bar'"
+        (onDirectoryChanged)="onRightDirectoryChanged($event)"
+    >
+    </app-directory-picker>
 
 </div>
 
-{{ statusMessage | async }}
-
+<div class="help-text">
+    {{ statusMessage | async }}
+</div>

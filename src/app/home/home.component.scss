@@ -1,47 +1,27 @@
-// @import "base-styles";
-
 .grid {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-        "left-label   left-dir-path   left-browse"
-        "right-label  right-dir-path  right-browse";
-    justify-items: stretch;    // stretch horizontally
-    align-items: center;       // center vertically
-    justify-content: stretch;
-    align-content: stretch;
+    display:               grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows:    auto auto;
+    grid-template-areas: "left-label left-dir-picker"
+                         "right-label right-dir-picker";
+    justify-items:         stretch;    // stretch horizontally
+    align-items:           center;     // center vertically
+    justify-content:       stretch;
+    align-content:         stretch;
 }
 
 .left-label {
     grid-area: left-label;
-    margin-right: 10px;
 }
 
-.left-dir-path {
-    grid-area: left-dir-path
-}
-
-.left-browse {
-    grid-area: left-browse
+.left-dir-picker {
+    grid-area: left-dir-picker;
 }
 
 .right-label {
     grid-area: right-label;
-    margin-right: 10px;
 }
 
-.right-dir-path {
-    grid-area: right-dir-path;
-}
-
-.right-browse {
-    grid-area: right-browse
-}
-
-
-.readonly-value {
-    padding: 2px;
-    margin: 2px;
-    border-bottom: 1px solid rgba($color: #cccccc, $alpha: 0.3);
+.right-dir-picker {
+    grid-area: right-dir-picker;
 }

@@ -25,8 +25,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HomeModule } from './home/home.module';
 
 import { AppComponent } from './app.component';
-import { DirectoryPickerComponent } from './directory-picker/directory-picker.component';
-
 
 import {reducer as appReducer} from "./state/app.reducer";
 
@@ -36,7 +34,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-    declarations: [AppComponent, DirectoryPickerComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         FormsModule,

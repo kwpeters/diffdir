@@ -2,9 +2,7 @@ import {createSelector} from "@ngrx/store";
 import * as fromApp from "./app.reducer";
 
 
-export interface IState extends fromApp.IState
-{
-}
+export interface IState extends fromApp.IState {}
 
 
 ////////////////////////////////////////////////////////////////////////////////
