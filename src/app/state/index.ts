@@ -1,4 +1,8 @@
-import {createSelector, Action} from "@ngrx/store";
+import { Injectable } from "@angular/core";
+import {Observable, from} from "rxjs";
+import {switchMap, withLatestFrom, filter} from "rxjs/operators";
+import {createSelector, Action, Store} from "@ngrx/store";
+import { Actions, Effect} from '@ngrx/effects';
 
 import {Directory} from "../depot/directory";
 
@@ -48,8 +52,9 @@ const initialState: IAppState = {
 //
 export enum AppActionTypes
 {
-    setLeftDir = "[root] set left directory",
-    setRightDir = "[root] set right directory"
+    setLeftDir             = "[root] set left directory",
+    setRightDir            = "[root] set right directory",
+    startDifferencesUpdate = "[root] start differences update"
 }
 
 
@@ -60,14 +65,24 @@ export enum AppActionTypes
 export class SetLeftDir implements Action
 {
     public readonly type = AppActionTypes.setLeftDir;
-    public constructor(public leftDir: Directory) { }
+    public constructor(public leftDir: Directory)
+    {}
 }
 
 
 export class SetRightDir implements Action
 {
     public readonly type = AppActionTypes.setRightDir;
-    public constructor(public rightDir: Directory) { }
+    public constructor(public rightDir: Directory)
+    {}
+}
+
+
+export class StartDifferencesUpdate implements Action
+{
+    public readonly type = AppActionTypes.startDifferencesUpdate;
+    public constructor()
+    {}
 }
 
 
@@ -77,7 +92,8 @@ export class SetRightDir implements Action
 
 export type AppActions =
     SetLeftDir |
-    SetRightDir;
+    SetRightDir |
+    StartDifferencesUpdate;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +112,9 @@ export function reducer(state: IAppState = initialState, action: AppActions): IA
 
         case AppActionTypes.setRightDir:
             newState.rightDir = action.rightDir;
+            break;
+
+        case AppActionTypes.startDifferencesUpdate:
             break;
     }
 
@@ -141,3 +160,52 @@ export const getStatusMessage = createSelector(
     selectApp,
     (state: IAppState) => state.statusMessage
 );
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Effects
+////////////////////////////////////////////////////////////////////////////////
+
+
+@Injectable()
+export class AppEffects
+{
+    // private _actions$: Actions;
+    // private _store: Store<IState>;
+
+    constructor(private actions$: Actions, private store: Store<IState>)
+    {
+        // console.log("_actions$:", actions$);
+        // this._actions$ = actions$;
+        // this._store = store;
+    }
+
+
+    @Effect()
+    directoryChange$: Observable<Action> = this.actions$
+    .pipe(
+        filter((action: Action) => {
+            return (action.type === AppActionTypes.setLeftDir) ||
+                   (action.type === AppActionTypes.setRightDir);
+        }),
+        withLatestFrom(this.store),
+        switchMap(([, store]) => {
+
+            const leftDir = getLeftDir(store);
+            // console.log("leftDir:", leftDir);
+
+            const rightDir = getRightDir(store);
+            // console.log("rightDir:", rightDir);
+
+            if (leftDir && rightDir) {
+                return from([new StartDifferencesUpdate()]);
+            }
+            else {
+                return from([]);
+            }
+        })
+    );
+
+
+
+}

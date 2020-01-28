@@ -22,6 +22,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { EffectsModule } from '@ngrx/effects';
+
 import { HomeModule } from './home/home.module';
 
 import { AppComponent } from './app.component';
@@ -59,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
                 logOnly: AppConfig.production
             }
         ),
+        EffectsModule.forRoot([fromApp.AppEffects]),
         NgbModule,
         TranslateModule.forRoot(
             {

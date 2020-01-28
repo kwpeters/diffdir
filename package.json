@@ -90,6 +90,7 @@
   },
   "dependencies": {
     "@ng-bootstrap/ng-bootstrap": "5.2.1",
+    "@ngrx/effects": "8.6.0",
     "@ngrx/store": "8.6.0",
     "@ngrx/store-devtools": "8.6.0",
     "bootstrap": "4.4.1",
