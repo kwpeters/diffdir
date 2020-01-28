@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import {Observable, from} from "rxjs";
-import {switchMap, withLatestFrom, filter} from "rxjs/operators";
-import {createSelector, Action, Store} from "@ngrx/store";
+import {switchMap, filter} from "rxjs/operators";
+import {createSelector, Action} from "@ngrx/store";
 import { Actions, Effect} from '@ngrx/effects';
 
 import {Directory} from "../depot/directory";
@@ -170,15 +170,7 @@ export const getStatusMessage = createSelector(
 @Injectable()
 export class AppEffects
 {
-    // private _actions$: Actions;
-    // private _store: Store<IState>;
-
-    constructor(private actions$: Actions, private store: Store<IState>)
-    {
-        // console.log("_actions$:", actions$);
-        // this._actions$ = actions$;
-        // this._store = store;
-    }
+    constructor(private actions$: Actions) { }
 
 
     @Effect()
@@ -188,24 +180,10 @@ export class AppEffects
             return (action.type === AppActionTypes.setLeftDir) ||
                    (action.type === AppActionTypes.setRightDir);
         }),
-        withLatestFrom(this.store),
-        switchMap(([, store]) => {
-
-            const leftDir = getLeftDir(store);
-            // console.log("leftDir:", leftDir);
-
-            const rightDir = getRightDir(store);
-            // console.log("rightDir:", rightDir);
-
-            if (leftDir && rightDir) {
-                return from([new StartDifferencesUpdate()]);
-            }
-            else {
-                return from([]);
-            }
+        switchMap(() => {
+            return from([new StartDifferencesUpdate()]);
         })
     );
-
 
 
 }
