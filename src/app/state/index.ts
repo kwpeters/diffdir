@@ -1,20 +1,11 @@
 import { Injectable } from "@angular/core";
 import {Observable, from} from "rxjs";
-import {switchMap, filter} from "rxjs/operators";
-import {createSelector, Action} from "@ngrx/store";
-import { Actions, Effect} from '@ngrx/effects';
+import {switchMap, filter, withLatestFrom, map} from "rxjs/operators";
+import {createSelector, Action, Store} from "@ngrx/store";
+import { Actions, Effect, ofType} from '@ngrx/effects';
 
 import {Directory} from "../depot/directory";
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Constants
-////////////////////////////////////////////////////////////////////////////////
-
-const STATUS_OK = "ok";
-const STATUS_DIRECTORY_NOT_DEFINED_LEFT = "Set the left directory.";
-const STATUS_DIRECTORY_NOT_DEFINED_RIGHT = "Set the right directory.";
-const STATUS_DIRECTORY_NOT_DEFINED_BOTH = "Set the left and right directories.";
+import {diffDirectories, DiffDirFileItem} from "../depot/diffDirectories";
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +16,7 @@ export interface IAppState
 {
     leftDir: Directory | undefined;
     rightDir: Directory | undefined;
-    statusMessage: string;
+    differencesUpdateInProgress: boolean;
 }
 
 
@@ -38,7 +29,7 @@ export interface IState
 const initialState: IAppState = {
     leftDir: undefined,
     rightDir: undefined,
-    statusMessage: STATUS_DIRECTORY_NOT_DEFINED_BOTH
+    differencesUpdateInProgress: false
 };
 
 
@@ -52,9 +43,10 @@ const initialState: IAppState = {
 //
 export enum AppActionTypes
 {
-    setLeftDir             = "[root] set left directory",
-    setRightDir            = "[root] set right directory",
-    startDifferencesUpdate = "[root] start differences update"
+    setLeftDir               = "[root] set left directory",
+    setRightDir              = "[root] set right directory",
+    differenceUpdateStart    = "[root] difference update start",
+    differenceUpdateComplete = "[root] difference update complete"
 }
 
 
@@ -66,7 +58,8 @@ export class SetLeftDir implements Action
 {
     public readonly type = AppActionTypes.setLeftDir;
     public constructor(public leftDir: Directory)
-    {}
+    {
+    }
 }
 
 
@@ -74,15 +67,26 @@ export class SetRightDir implements Action
 {
     public readonly type = AppActionTypes.setRightDir;
     public constructor(public rightDir: Directory)
-    {}
+    {
+    }
 }
 
 
-export class StartDifferencesUpdate implements Action
+export class DifferenceUpdateStart implements Action
 {
-    public readonly type = AppActionTypes.startDifferencesUpdate;
+    public readonly type = AppActionTypes.differenceUpdateStart;
     public constructor()
-    {}
+    {
+    }
+}
+
+
+export class DifferenceUpdateComplete implements Action
+{
+    public readonly type = AppActionTypes.differenceUpdateComplete;
+    constructor(public readonly diffDirFileItems: Array<DiffDirFileItem>)
+    {
+    }
 }
 
 
@@ -93,7 +97,8 @@ export class StartDifferencesUpdate implements Action
 export type AppActions =
     SetLeftDir |
     SetRightDir |
-    StartDifferencesUpdate;
+    DifferenceUpdateStart |
+    DifferenceUpdateComplete;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,26 +119,15 @@ export function reducer(state: IAppState = initialState, action: AppActions): IA
             newState.rightDir = action.rightDir;
             break;
 
-        case AppActionTypes.startDifferencesUpdate:
+        case AppActionTypes.differenceUpdateStart:
+            newState.differencesUpdateInProgress = true;
             break;
-    }
 
-    // Update the status message
-    if ((newState.leftDir === undefined) && (newState.rightDir === undefined))
-    {
-        newState.statusMessage = STATUS_DIRECTORY_NOT_DEFINED_BOTH;
-    }
-    else if (newState.leftDir === undefined)
-    {
-        newState.statusMessage = STATUS_DIRECTORY_NOT_DEFINED_LEFT;
-    }
-    else if (newState.rightDir === undefined)
-    {
-        newState.statusMessage = STATUS_DIRECTORY_NOT_DEFINED_RIGHT;
-    }
-    else
-    {
-        newState.statusMessage = STATUS_OK;
+        case AppActionTypes.differenceUpdateComplete:
+            console.log("Got complete action with the following results:");
+            console.log(action.diffDirFileItems);
+            newState.differencesUpdateInProgress = false;
+            break;
     }
 
     return newState;
@@ -156,9 +150,9 @@ export const getRightDir = createSelector(
     (state: IAppState) => state.rightDir
 );
 
-export const getStatusMessage = createSelector(
+export const getDifferencesUpdateInProgress = createSelector(
     selectApp,
-    (state: IAppState) => state.statusMessage
+    (state: IAppState) => state.differencesUpdateInProgress
 );
 
 
@@ -170,7 +164,11 @@ export const getStatusMessage = createSelector(
 @Injectable()
 export class AppEffects
 {
-    constructor(private actions$: Actions) { }
+    constructor(
+        private actions$: Actions,
+        private store$: Store<IState>
+    )
+    { }
 
 
     @Effect()
@@ -181,9 +179,35 @@ export class AppEffects
                    (action.type === AppActionTypes.setRightDir);
         }),
         switchMap(() => {
-            return from([new StartDifferencesUpdate()]);
+            return from([new DifferenceUpdateStart()]);
         })
     );
 
 
+    @Effect()
+    differenceUpdateStart$: Observable<Action> = this.actions$
+    .pipe(
+        ofType(AppActionTypes.differenceUpdateStart),
+        withLatestFrom(this.store$),
+        switchMap(([, storeState]) => {
+
+            const leftDir = getLeftDir(storeState);
+            const rightDir = getRightDir(storeState);
+
+            if (!leftDir || !rightDir) {
+                console.log("One or more directory not specified.  Completing update now.");
+                return from([new DifferenceUpdateComplete([])]);
+            }
+
+            return from(diffDirectories(leftDir, rightDir, undefined, true))
+            .pipe(
+                map((diffDirFileItems) => new DifferenceUpdateComplete(diffDirFileItems))
+            );
+        })
+    );
 }
+
+
+// TODO: Fix the case where the user clicks Cancel on the open dialog.
+
+// TODO: Fix problem where diffDirectories() opens more files than the OS can support.

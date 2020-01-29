@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit
     public vm: {
         leftDirectory: Observable<Directory | undefined>,
         rightDirectory: Observable<Directory | undefined>,
-        statusMessage: Observable<string>
+        differenceUpdateInProgress: Observable<boolean>
     };
 
 
@@ -30,9 +30,9 @@ export class HomeComponent implements OnInit
     ngOnInit(): void
     {
         this.vm = {
-            leftDirectory:  this._store.pipe(select(fromApp.getLeftDir)),
-            rightDirectory: this._store.pipe(select(fromApp.getRightDir)),
-            statusMessage:  this._store.pipe(select(fromApp.getStatusMessage))
+            leftDirectory:              this._store.pipe(select(fromApp.getLeftDir)),
+            rightDirectory:             this._store.pipe(select(fromApp.getRightDir)),
+            differenceUpdateInProgress: this._store.pipe(select(fromApp.getDifferencesUpdateInProgress))
         };
     }
 

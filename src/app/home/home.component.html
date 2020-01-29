@@ -18,15 +18,6 @@
 
 </div>
 
-<div class="help-text">
-    {{ vm.statusMessage | async }}
-</div>
-
-
-<div>
-    {{ (vm.leftDirectory | async)?.toString() }}
-</div>
-
-<div>
-    {{ (vm.rightDirectory | async)?.toString() }}
+<div *ngIf="vm.differenceUpdateInProgress | async">
+    Calculating differences...
 </div>
