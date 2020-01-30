@@ -1,6 +1,7 @@
-import { app, BrowserWindow, screen, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, screen, ipcMain, dialog, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
@@ -69,12 +70,14 @@ try {
     //
     // Using invoke()/handle() for IPC.
     //
-    ipcMain.handle("openFolder", async (event, arg) => {
-        return dialog.showOpenDialog(win, {properties: ["openDirectory"]})
-        .then((openResult) => {
-            return openResult.filePaths;
-        });
-    });
+    ipcMain.handle(
+        "showOpenDialog",
+        async (event, openDialogOptions: OpenDialogOptions): Promise<OpenDialogReturnValue> =>
+        {
+            const openResult = await dialog.showOpenDialog(win, openDialogOptions);
+            return openResult;
+        }
+    );
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.

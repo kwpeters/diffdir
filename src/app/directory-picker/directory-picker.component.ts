@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+
 import {Directory} from "../depot/directory";
 import {ElectronService} from "../core/services/electron/electron.service";
+import {OpenDialogReturnValue, OpenDialogOptions} from "electron";
 
 
 @Component({
@@ -39,12 +41,25 @@ export class DirectoryPickerComponent implements OnInit
 
     public onBrowse(): void
     {
+        const openDialogOptions: OpenDialogOptions = {
+            title:       "Select directory to compare.",
+            defaultPath: this.vm.dirName,
+            buttonLabel: "Select Directory",
+            properties:  ["openDirectory", "createDirectory", "promptToCreate", "treatPackageAsDirectory"],
+            message:     "Select directory to compare."
+        };
 
-        this._electronService.ipcRenderer.invoke("openFolder")
-        .then((filePaths) => {
-            const selectedDir =  filePaths[0];
-            this.vm.dirName = selectedDir;
-            this.onDirectoryChanged.emit(new Directory(selectedDir));
+        this._electronService.showOpenDialog(openDialogOptions)
+        .then((openResult: OpenDialogReturnValue) => {
+            if (openResult.canceled) {
+                // The user canceled out of the dialog.  Just pretend like
+                // nothing happened.
+            }
+            else {
+                const selectedDir = openResult.filePaths[0];
+                this.vm.dirName = selectedDir;
+                this.onDirectoryChanged.emit(new Directory(selectedDir));
+            }
         });
     }
 }
