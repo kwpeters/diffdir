@@ -208,6 +208,4 @@ export class AppEffects
 }
 
 
-// TODO: Fix the case where the user clicks Cancel on the open dialog.
-
 // TODO: Fix problem where diffDirectories() opens more files than the OS can support.
