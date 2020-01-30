@@ -124,8 +124,8 @@ export function reducer(state: IAppState = initialState, action: AppActions): IA
             break;
 
         case AppActionTypes.differenceUpdateComplete:
-            console.log("Got complete action with the following results:");
-            console.log(action.diffDirFileItems);
+            // console.log("Got complete action with the following results:");
+            // console.log(action.diffDirFileItems);
             newState.differencesUpdateInProgress = false;
             break;
     }
