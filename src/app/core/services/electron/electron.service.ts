@@ -11,22 +11,11 @@ import * as fs from 'fs';
 })
 export class ElectronService
 {
-    private _ipcRenderer: typeof ipcRenderer;
-    private _webFrame: typeof webFrame;
-    private _remote: typeof remote;
+    private _ipcRenderer:  typeof ipcRenderer;
+    private _webFrame:     typeof webFrame;
+    private _remote:       typeof remote;
     private _childProcess: typeof childProcess;
-    private _fs: typeof fs;
-    // ipcRenderer: typeof ipcRenderer;
-    // webFrame: typeof webFrame;
-    // remote: typeof remote;
-    // childProcess: typeof childProcess;
-    // fs: typeof fs;
-
-
-    get isElectron(): boolean
-    {
-        return window && window.process && window.process.type;
-    }
+    private _fs:           typeof fs;
 
 
     constructor()
@@ -40,6 +29,12 @@ export class ElectronService
             this._childProcess = window.require('child_process');
             this._fs           = window.require('fs');
         }
+    }
+
+
+    get isElectron(): boolean
+    {
+        return window && window.process && window.process.type;
     }
 
 
