@@ -21,3 +21,7 @@
 <div *ngIf="vm.differenceUpdateInProgress | async">
     Calculating differences...
 </div>
+
+<div *ngFor="let curDiffItemVM of (vm.diffItemVMs | async)">
+    {{ curDiffItemVM.diffDirFileItem.relativeFilePath}}
+</div>

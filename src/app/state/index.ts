@@ -5,7 +5,8 @@ import {createSelector, Action, Store} from "@ngrx/store";
 import { Actions, Effect, ofType} from '@ngrx/effects';
 
 import {Directory} from "../depot/directory";
-import {diffDirectories, DiffDirFileItem} from "../depot/diffDirectories";
+import {diffDirectories} from "../depot/diffDirectories";
+import {DiffItemVM} from "../models/diffItemVM";
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,7 @@ export interface IAppState
     leftDir: Directory | undefined;
     rightDir: Directory | undefined;
     differencesUpdateInProgress: boolean;
+    diffItemVMs: Array<DiffItemVM>
 }
 
 
@@ -27,9 +29,10 @@ export interface IState
 
 
 const initialState: IAppState = {
-    leftDir: undefined,
-    rightDir: undefined,
-    differencesUpdateInProgress: false
+    leftDir:                     undefined,
+    rightDir:                    undefined,
+    differencesUpdateInProgress: false,
+    diffItemVMs: []
 };
 
 
@@ -84,7 +87,7 @@ export class DifferenceUpdateStart implements Action
 export class DifferenceUpdateComplete implements Action
 {
     public readonly type = AppActionTypes.differenceUpdateComplete;
-    constructor(public readonly diffDirFileItems: Array<DiffDirFileItem>)
+    constructor(public readonly diffItemVMs: Array<DiffItemVM>)
     {
     }
 }
@@ -124,9 +127,8 @@ export function reducer(state: IAppState = initialState, action: AppActions): IA
             break;
 
         case AppActionTypes.differenceUpdateComplete:
-            // console.log("Got complete action with the following results:");
-            // console.log(action.diffDirFileItems);
             newState.differencesUpdateInProgress = false;
+            newState.diffItemVMs                 = action.diffItemVMs;
             break;
     }
 
@@ -153,6 +155,11 @@ export const getRightDir = createSelector(
 export const getDifferencesUpdateInProgress = createSelector(
     selectApp,
     (state: IAppState) => state.differencesUpdateInProgress
+);
+
+export const getDiffItemVMs = createSelector(
+    selectApp,
+    (state: IAppState) => state.diffItemVMs
 );
 
 
@@ -201,7 +208,14 @@ export class AppEffects
 
             return from(diffDirectories(leftDir, rightDir, undefined, true))
             .pipe(
-                map((diffDirFileItems) => new DifferenceUpdateComplete(diffDirFileItems))
+                map((diffDirFileItems) =>{
+                    // Convert the services layer DiffDirFileItem to a viewmodel
+                    // DiffItemVM.
+                    const vms = diffDirFileItems.map((curDiffDirFileItem) => {
+                        return new DiffItemVM(curDiffDirFileItem);
+                    });
+                    return new DifferenceUpdateComplete(vms);
+                })
             );
         })
     );
