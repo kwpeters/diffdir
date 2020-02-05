@@ -36,44 +36,45 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-    declarations: [AppComponent],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpClientModule,
-        CoreModule,
-        SharedModule,
-        HomeModule,
-        AppRoutingModule,
-        StoreModule.forRoot(
-            {appState: fromApp.reducer} //,
-            // {
-            //     runtimeChecks: {
-            //         strictStateImmutability: true,
-            //         strictActionImmutability: true
-            //     }
-            // }
-        ),
-        StoreDevtoolsModule.instrument(
-            {
-                name: "diffdir DevTools",
-                maxAge: 25,
-                logOnly: AppConfig.production
-            }
-        ),
-        EffectsModule.forRoot([fromApp.AppEffects]),
-        NgbModule,
-        TranslateModule.forRoot(
-            {
-                loader: {
-                    provide: TranslateLoader,
-                    useFactory: HttpLoaderFactory,
-                    deps: [HttpClient]
-                }
-            }
-        )
-    ],
-    providers: [],
-    bootstrap: [AppComponent]
-})
+              declarations: [AppComponent],
+              imports:      [
+                  BrowserModule,
+                  FormsModule,
+                  HttpClientModule,
+                  CoreModule,
+                  SharedModule,
+                  HomeModule,
+                  AppRoutingModule,
+                  StoreModule.forRoot(
+                      {appState: fromApp.reducer} //,
+                      // {
+                      //     runtimeChecks: {
+                      //         strictStateImmutability: true,
+                      //         strictActionImmutability: true
+                      //     }
+                      // }
+                  ),
+                  StoreDevtoolsModule.instrument(
+                      {
+                          name:    "diffdir DevTools",
+                          maxAge:  25,
+                          logOnly: AppConfig.production
+                      }
+                  ),
+                  EffectsModule.forRoot([fromApp.AppEffects]),
+                  NgbModule,
+                  TranslateModule.forRoot(
+                      {
+                          loader: {
+                              provide:    TranslateLoader,
+                              useFactory: HttpLoaderFactory,
+                              deps:       [HttpClient]
+                          }
+                      }
+                  )
+              ],
+              providers:    [],
+              exports:      [],
+              bootstrap:    [AppComponent]
+          })
 export class AppModule { }

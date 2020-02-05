@@ -22,7 +22,7 @@ export class DiffItemVM
     }
 
 
-    public get diffDirFileItem(): DiffDirFileItem
+    public get diffItem(): DiffDirFileItem
     {
         return this._item;
     }
